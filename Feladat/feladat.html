@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felhasználók Kezelése</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .card {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4 mb-4">Felhasználók Kezelése</h2>
+
+        
+        <form id="userForm" class="mb-4">
+            <div class="form-group">
+                <label for="username">Felhasználónév:</label>
+                <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Jelszó:</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="button" onclick="createUser()" class="btn btn-primary">Létrehozás</button>
+        </form>
+
+        
+        <div id="userList" class="row">
+        </div>
+    </div>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    
+    <script>
+        
+        let users = [];
+
+       
+        function createUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+         
+            if (username && password) {
+                const user = {
+                    Id: users.length + 1,
+                    UserName: username,
+                    Password: password,
+                    CreatedTime: new Date().toLocaleString()
+                };
+
+                users.push(user);
+                displayUsers();
+                clearForm();
+            } else {
+                alert('Minden mezőt ki kell tölteni.');
+            }
+        }
+
+        
+        function displayUsers() {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+
+            users.forEach(user => {
+                const card = document.createElement('div');
+                card.className = 'col-md-4';
+                card.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">${user.UserName}</h5>
+                            <p class="card-text">ID: ${user.Id}</p>
+                            <p class="card-text">Jelszó: ${user.Password}</p>
+                            <p class="card-text">Létrehozva: ${user.CreatedTime}</p>
+                            <button type="button" onclick="deleteUser(${user.Id})" class="btn btn-danger">Törlés</button>
+                        </div>
+                    </div>
+                `;
+                userList.appendChild(card);
+            });
+        }
+
+        
+        function deleteUser(id) {
+            users = users.filter(user => user.Id !== id);
+            displayUsers();
+        }
+
+      
+        function clearForm() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+      
+        displayUsers();
+    </script>
+</body>
+</html>
